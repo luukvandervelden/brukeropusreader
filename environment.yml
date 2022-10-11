@@ -1,0 +1,22 @@
+channels:
+    - conda-forge
+    - defaults
+
+dependencies:
+    - numpy
+    - scipy
+
+    # mainly for install and a bit more...
+    - setuptools
+    - setuptools_scm
+    - git
+
+    # just for testing
+    - pytest=6.2.5
+    - pytest-doctestplus
+    - black
+    - flake8
+
+    # DEV: build
+    - conda-build
+    - anaconda-client
