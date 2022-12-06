@@ -71,24 +71,24 @@ def parse_data(data: bytes, blocks_meta: List[BlockMeta]) -> OpusData:
             name = name + '_(' + str(i) + ')'
         opus_data[name] = parsed_data
     return opus_data
-    
+
+
 def parse_sm(data_struct, data_type="ScSm"):
 	# Time-resolved data (interferogram goes in IgSm, spectrum in ScSm)
-	# unless only one time slice, when it can be handled as normal data, 
+	# unless only one time slice, when it can be handled as normal data,
 	# has some lines of junk in there.  The magic numbers below are consistent
 	# across all tests by ChrisHodgesUK
-	junk_lines_at_start=8
-	junk_lines_between_spectra=38
-	WAS=data_struct["Acquisition"]["WAS"]#number of timeslices
-	NPT=data_struct[f"{data_type} Data Parameter"]["NPT"]# points per timeslice
-	raw_Sm=data_struct[data_type]#grab the data
-	if WAS==1:
-		Sm=opus_data[data_type][0:NPT]
+	junk_lines_at_start = 8
+	junk_lines_between_spectra = 38
+	WAS = data_struct["Acquisition"]["WAS"]#number of timeslices
+	NPT = data_struct[f"{data_type} Data Parameter"]["NPT"]# points per timeslice
+	raw_Sm = data_struct[data_type]#grab the data
+	if WAS == 1:
+		Sm = opus_data[data_type][0:NPT]
 	else:
-		Sm=np.zeros((NPT,WAS))
+		Sm = np.zeros((NPT,WAS))
 		for timeslice in range(WAS): #reshape the array, discarding junk
-			start=junk_lines_at_start+timeslice*(NPT+junk_lines_between_spectra)
-			Sm[:,timeslice]=raw_Sm[start:start+NPT]
-
+			start = junk_lines_at_start + timeslice*(NPT + junk_lines_between_spectra)
+			Sm[:,timeslice] = raw_Sm[start:start+NPT]
 
 	return Sm
