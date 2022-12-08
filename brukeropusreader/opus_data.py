@@ -27,14 +27,20 @@ class OpusData(dict):
         return iwave_nums, f2(iwave_nums)
 
     def get_spectra(self, spec_name="AB"):
-        '''Get the spectra series. The first spectrum is at index 8 and the length
-        is 1659 data points, so it goes from 8 to 1666. The second starts at 1705.
+        '''Get the spectra series. The first spectrum starts after a number of
+        junk lines 'JUNK_LINES_START'. There is 'JUNK_LINES_BETWEEN'
+        lines between the spectra.
         '''
-        # TODO: 405 spectra could be different, I should extract that number
-        # from the file
-        spectra = np.empty(shape=(405, 1659))
-        for i in range(0,405):
-            indices = np.arange(8,1667) + i*(1659 + 39 - 1)
-            spectra[i] = self[spec_name][indices]
+        data = self[spec_name]
+        JUNK_LINES_START = 8
+        JUNK_LINES_BETWEEN = 38
+        npt = self[f"{spec_name} Data Parameter"]["NPT"]
+        num_spectra = round(
+            (data.size - JUNK_LINES_START) / (npt + JUNK_LINES_BETWEEN))
+
+        spectra = np.empty(shape=(num_spectra, npt))
+        for i in range(0,num_spectra):
+            start = JUNK_LINES_START + i*(npt + JUNK_LINES_BETWEEN)
+            spectra[i] = data[start:start+npt]
 
         return spectra
