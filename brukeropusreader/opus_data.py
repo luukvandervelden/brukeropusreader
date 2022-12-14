@@ -9,11 +9,11 @@ class OpusData(dict):
         number of datapoints (NPT)
         '''
         param_key = f"{spec_name} Data Parameter"
-        fxv = self[param_key]["FXV"]
-        lxv = self[param_key]["LXV"]
+        FXV = self[param_key]["FXV"]
+        LXV = self[param_key]["LXV"]
         # the number of points here is OK. It is "AB" that can return more values (equals to zero)
-        npt = self[param_key]["NPT"]
-        x_no_unit = np.linspace(fxv, lxv, npt)
+        NPT = self[param_key]["NPT"]
+        x_no_unit = np.linspace(FXV, LXV, NPT)
         if wavenums:
             return x_no_unit
         else:
@@ -32,13 +32,13 @@ class OpusData(dict):
         lines between the spectra.
         '''
         data = self[spec_name]
-        npt = self[f"{spec_name} Data Parameter"]["NPT"]
+        NPT = self[f"{spec_name} Data Parameter"]["NPT"]
         num_spectra = round(
-            (data.size - JUNK_LINES_START) / (npt + JUNK_LINES_BETWEEN))
+            (data.size - JUNK_LINES_START) / (NPT + JUNK_LINES_BETWEEN))
 
-        spectra = np.empty(shape=(num_spectra, npt))
+        spectra = np.empty(shape=(num_spectra, NPT))
         for i in range(0,num_spectra):
-            start = JUNK_LINES_START + i*(npt + JUNK_LINES_BETWEEN)
-            spectra[i] = data[start:start+npt]
+            start = JUNK_LINES_START + i*(NPT + JUNK_LINES_BETWEEN)
+            spectra[i] = data[start:start+NPT]
 
         return spectra
