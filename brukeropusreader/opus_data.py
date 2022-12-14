@@ -1,6 +1,6 @@
 import numpy as np
 from scipy.interpolate import interp1d
-
+from brukeropusreader.constants import JUNK_LINES_START, JUNK_LINES_BETWEEN
 
 class OpusData(dict):
     def get_range(self, spec_name="AB", wavenums=True):
@@ -32,8 +32,6 @@ class OpusData(dict):
         lines between the spectra.
         '''
         data = self[spec_name]
-        JUNK_LINES_START = 8
-        JUNK_LINES_BETWEEN = 38
         npt = self[f"{spec_name} Data Parameter"]["NPT"]
         num_spectra = round(
             (data.size - JUNK_LINES_START) / (npt + JUNK_LINES_BETWEEN))

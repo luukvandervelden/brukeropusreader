@@ -5,6 +5,8 @@ from brukeropusreader.constants import (
     HEADER_LEN,
     FIRST_CURSOR_POSITION,
     META_BLOCK_SIZE,
+    JUNK_LINES_START,
+    JUNK_LINES_BETWEEN
 )
 from brukeropusreader.opus_data import OpusData
 from brukeropusreader.opus_reader import (
@@ -78,8 +80,6 @@ def parse_sm(data_struct, data_type="ScSm"):
 	# unless only one time slice, when it can be handled as normal data,
 	# has some lines of junk in there.  The magic numbers below are consistent
 	# across all tests by ChrisHodgesUK
-	junk_lines_at_start = 8
-	junk_lines_between_spectra = 38
 	WAS = data_struct["Acquisition"]["WAS"]#number of timeslices
 	NPT = data_struct[f"{data_type} Data Parameter"]["NPT"]# points per timeslice
 	raw_Sm = data_struct[data_type]#grab the data
@@ -88,7 +88,7 @@ def parse_sm(data_struct, data_type="ScSm"):
 	else:
 		Sm = np.zeros((NPT,WAS))
 		for timeslice in range(WAS): #reshape the array, discarding junk
-			start = junk_lines_at_start + timeslice*(NPT + junk_lines_between_spectra)
+			start = JUNK_LINES_START + timeslice*(NPT + JUNK_LINES_BETWEEN)
 			Sm[:,timeslice] = raw_Sm[start:start+NPT]
 
 	return Sm
