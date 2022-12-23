@@ -62,7 +62,7 @@ BLOCK_31 = {
     # Key is channel_type
     16: "AB Data Parameter",
     # channel_type = 16 was the one which was renamed to AB Data Parameter_(1)
-    # by the parse_data script from opus_parser. I assume this is incorrect, as
+    # by the parse_data method. I assume this is incorrect, as
     # data_type 15 channel_type 144 of AB was renamed to AB_(1)
     144: "AB_(1) Data Parameter"
     }
