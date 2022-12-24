@@ -11,3 +11,5 @@ META_BLOCK_SIZE = 12
 ENCODING_LATIN = "latin-1"
 ENCODING_UTF = "utf-8"
 PARAM_TYPES = {0: "int", 1: "float", 2: "str", 3: "str", 4: "str"}
+JUNK_LINES_START = 8
+JUNK_LINES_BETWEEN = 38

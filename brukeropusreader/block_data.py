@@ -7,7 +7,7 @@ from brukeropusreader.block_parser import parse_series, parse_param, parse_text
 class UnknownBlockType(Exception):
     pass
 
-
+# data_type = 0
 BLOCK_0 = defaultdict(
     lambda: ("Text Information", parse_text),
     {
@@ -19,24 +19,56 @@ BLOCK_0 = defaultdict(
     },
 )
 
-BLOCK_7 = {4: "ScSm", 8: "IgSm", 12: "PhSm", 132: "ScSm_(1)", 136: "IgSm_(1)"}
+# data_type = 7
+BLOCK_7 = {
+    # Key is channel_type
+    4: "ScSm",
+    8: "IgSm",
+    12: "PhSm",
+    132: "ScSm_(1)",
+    136: "IgSm_(1)"
+    }
 
-BLOCK_11 = {4: "ScRf", 8: "IgRf", 132: "ScRf_(1)", 136: "IgRf_(1)" }
+# data_type = 11
+BLOCK_11 = {
+    # Key is channel_type
+    4: "ScRf",
+    8: "IgRf",
+    132: "ScRf_(1)",
+    136: "IgRf_(1)"
+    }
 
+# data_type = 23
 BLOCK_23 = {
+    # Key is channel_type
     4: "ScSm Data Parameter",
     8: "IgSm Data Parameter",
     12: "PhSm Data Parameter",
     132: "ScSm_(1) Data Parameter",
     136: "IgSm_(1) Data Parameter"
-}
+    }
 
-BLOCK_27 = {4: "ScRf Data Parameter",
-            8: "IgRf Data Parameter",
-            132: "ScRf_(1) Data Parameter",
-            136: "IgRf_(1) Data Parameter"}
+# data_type = 27
+BLOCK_27 = {
+    # Key is channel_type
+    4: "ScRf Data Parameter",
+    8: "IgRf Data Parameter",
+    132: "ScRf_(1) Data Parameter",
+    136: "IgRf_(1) Data Parameter"
+    }
+
+# data_type = 31
+BLOCK_31 = {
+    # Key is channel_type
+    16: "AB Data Parameter",
+    # channel_type = 16 was the one which was renamed to AB Data Parameter_(1)
+    # by the parse_data method. I assume this is incorrect, as
+    # data_type 15 channel_type 144 of AB was renamed to AB_(1)
+    144: "AB_(1) Data Parameter"
+    }
 
 DIFFERENT_BLOCKS = {
+    # Key is data_type
     31: "AB Data Parameter",
     32: "Instrument",
     40: "Instrument (Rf)",
@@ -46,8 +78,8 @@ DIFFERENT_BLOCKS = {
     72: "Fourier Transformation (Rf)",
     96: "Optik",
     104: "Optik (Rf)",
-    160: "Sample",
-}
+    160: "Sample"
+    }
 
 
 class BlockMeta:
@@ -78,6 +110,8 @@ class BlockMeta:
             return BLOCK_23[self.channel_type], parse_param
         elif self.data_type == 27:
             return BLOCK_27[self.channel_type], parse_param
+        elif self.data_type == 31:
+            return BLOCK_31[self.channel_type], parse_param
         elif self.data_type in DIFFERENT_BLOCKS.keys():
             return DIFFERENT_BLOCKS[self.data_type], parse_param
         else:

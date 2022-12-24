@@ -1,12 +1,11 @@
 import argparse
 import sys
-
-from brukeropusreader import read_file
+from brukeropusreader import OpusData
 
 
 def main(path_to_file):
     print(f"Reading opus file from path" f"{path_to_file}")
-    opus_data = read_file(path_to_file)
+    opus_data = OpusData(path_to_file)
 
     print(f"Data fields: " f"{list(opus_data.keys())}")
 
