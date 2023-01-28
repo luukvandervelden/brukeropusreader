@@ -20,6 +20,7 @@ BLOCK_0 = defaultdict(
 )
 
 # data_type = 7
+# other sample spectral data (single channel, interferogram, power spectrum, ...)
 BLOCK_7 = {
     # Key is channel_type
     4: "ScSm",
@@ -31,6 +32,7 @@ BLOCK_7 = {
     }
 
 # data_type = 11
+# other reference spectral data (single channel, interferogram, power spectrum, ...)
 BLOCK_11 = {
     # Key is channel_type
     4: "ScRf",
@@ -42,6 +44,7 @@ BLOCK_11 = {
     }
 
 # data_type = 23
+# parameters of other sample spectral data
 BLOCK_23 = {
     # Key is channel_type
     4: "ScSm Data Parameter",
@@ -53,6 +56,7 @@ BLOCK_23 = {
     }
 
 # data_type = 27
+# parameters of other reference spectral data
 BLOCK_27 = {
     # Key is channel_type
     4: "ScRf Data Parameter",
@@ -94,12 +98,14 @@ class BlockMeta:
         data_type: int,
         channel_type: int,
         text_type: int,
+        additional_type: int,
         chunk_size: int,
-        offset: int,
+        offset: int
     ):
         self.data_type = data_type
         self.channel_type = channel_type
         self.text_type = text_type
+        self.additional_type = additional_type
         self.chunk_size = chunk_size
         self.offset = offset
 
