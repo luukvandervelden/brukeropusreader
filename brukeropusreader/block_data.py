@@ -25,6 +25,7 @@ BLOCK_7 = {
     4: "ScSm",
     8: "IgSm",
     12: "PhSm",
+    56: "PwSm",
     132: "ScSm_(1)",
     136: "IgSm_(1)"
     }
@@ -34,6 +35,8 @@ BLOCK_11 = {
     # Key is channel_type
     4: "ScRf",
     8: "IgRf",
+    12: "PhRf",
+    56: "PwRf",
     132: "ScRf_(1)",
     136: "IgRf_(1)"
     }
@@ -44,6 +47,7 @@ BLOCK_23 = {
     4: "ScSm Data Parameter",
     8: "IgSm Data Parameter",
     12: "PhSm Data Parameter",
+    56: "PwSm Data Parameter",
     132: "ScSm_(1) Data Parameter",
     136: "IgSm_(1) Data Parameter"
     }
@@ -53,6 +57,8 @@ BLOCK_27 = {
     # Key is channel_type
     4: "ScRf Data Parameter",
     8: "IgRf Data Parameter",
+    12: "PhRf Data Parameter",
+    56: "PwRf Data Parameter",
     132: "ScRf_(1) Data Parameter",
     136: "IgRf_(1) Data Parameter"
     }
