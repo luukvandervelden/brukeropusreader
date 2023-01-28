@@ -11,6 +11,7 @@ from brukeropusreader.opus_reader import (
     read_data_type,
     read_channel_type,
     read_text_type,
+    read_additional_type,
     read_chunk_size,
     read_offset,
 )
@@ -29,6 +30,15 @@ class OpusData(dict):
         self = self.parse_data(data, meta_data)
 
     def parse_meta(self, data: bytes) -> List[BlockMeta]:
+        """Parse the header of the opus file.
+
+        Returns a list of metadata (BlockMeta) for each block to be read,
+
+        :parameter:
+            data: bytes content of the opus file
+        :returns:
+            parse_meta: list of BlockMeta
+        """
         header = data[:HEADER_LEN]
         spectra_meta = []
         cursor = FIRST_CURSOR_POSITION
@@ -39,14 +49,15 @@ class OpusData(dict):
             data_type = read_data_type(header, cursor)
             channel_type = read_channel_type(header, cursor)
             text_type = read_text_type(header, cursor)
+            additional_type = read_additional_type(header, cursor)
             chunk_size = read_chunk_size(header, cursor)
             offset = read_offset(header, cursor)
 
             if offset <= 0:
                 break
 
-            block_meta = BlockMeta(data_type, channel_type,
-                                text_type, chunk_size, offset)
+            block_meta = BlockMeta(data_type, channel_type, text_type,
+                                   additional_type, chunk_size, offset)
 
             spectra_meta.append(block_meta)
 
@@ -57,14 +68,17 @@ class OpusData(dict):
         return spectra_meta
 
     def parse_data(self, data: bytes, blocks_meta: List[BlockMeta]):
+        """parse the data of the opus file using the file header's informations
+        parame"""
         for block_meta in blocks_meta:
             try:
                 name, parser = block_meta.get_name_and_parser()
             except UnknownBlockType:
                 continue
             parsed_data = parser(data, block_meta)
-            # in some instances, multiple entries - in particular 'AB' seem to be present
-            # they are added with a key ending by '_(1)', '_(2)', etc...
+            # in some instances, multiple entries - in particular 'AB' are
+            # present. They are added with a key ending by
+            # '_(1)', '_(2)', etc...
             if name in self.keys():
                 i = 1
                 while name + '_(' + str(i) + ')' in self.keys():
@@ -81,7 +95,8 @@ class OpusData(dict):
         param_key = f"{spec_name} Data Parameter"
         FXV = self[param_key]["FXV"]
         LXV = self[param_key]["LXV"]
-        # the number of points here is OK. It is "AB" that can return more values (equals to zero)
+        # the number of points here is OK.
+        # It is "AB" that can return more values (equals to zero)
         NPT = self[param_key]["NPT"]
         x_no_unit = np.linspace(FXV, LXV, NPT)
         if wavenums:
@@ -99,8 +114,8 @@ class OpusData(dict):
     def parse_sm(self, data_type="ScSm"):
         # Time-resolved data (interferogram goes in IgSm, spectrum in ScSm)
         # unless only one time slice, when it can be handled as normal data,
-        # has some lines of junk in there.  The magic numbers below are consistent
-        # across all tests by ChrisHodgesUK
+        # has some lines of junk in there.  The magic numbers below are
+        # consistent across all tests by ChrisHodgesUK
         WAS = self["Acquisition"]["WAS"]#number of timeslices
         NPT = self[f"{data_type} Data Parameter"]["NPT"]# points per timeslice
         raw_Sm = self[data_type]#grab the data
